@@ -5,18 +5,27 @@ const note_title_el = document.getElementById('noteTitle');
 const note_content_el = document.getElementById('noteContent');
 const note_submit_el = document.getElementById('noteSubmit');
 
+async function init() {
+    const notes = await api.readNotes();
+    const noteList = document.getElementById('noteList');
 
-note_submit_el.addEventListener('click', async () => {
-    const title = note_title_el.value;
-    const content = note_content_el.value;
+    notes.forEach(note => {
+        const li = document.createElement('li');
+        li.textContent = `Title: ${note.title}, Content: ${note.content}`;
+        noteList.appendChild(li);
+    });
 
-    const res = await api.createNote({
-        title,
-        content
-    })
+    note_submit_el.addEventListener('click', async () => {
+        const title = note_title_el.value;
+        const content = note_content_el.value;
 
-    console.log(res);
+        const res = await api.createNote({
+            title,
+            content
+        });
+        note_title_el.value = "";
+        note_content_el.value = "";
+    });
+}
 
-    note_title_el.value = "";
-    note_content_el.value = "";
-})
+init();

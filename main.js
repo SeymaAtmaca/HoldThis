@@ -25,6 +25,8 @@ function createWindow() {
             if (fs.existsSync(filePath)) {
                 const currentNotes = await fs.promises.readFile(filePath, 'utf8');
                 notes = JSON.parse(currentNotes);
+            } else {
+                fs.mkdirSync(path.join(__dirname, 'notes', 'notes.json'));
             }
 
             const newNote = { title: data.title, content: data.content };
@@ -38,6 +40,32 @@ function createWindow() {
             return { success: false, message: 'Dosya işlemleri hatası.' };
         }
     });
+
+    ipcMain.handle('read-notes', async (event) => {
+        try {
+            const filePath = path.join(__dirname, 'notes', 'notes.json');
+            const jsonData = await fs.promises.readFile(filePath, 'utf8');
+            var notes;
+            try {
+                notes = JSON.parse(jsonData);
+
+                notes.forEach(note => {
+                    console.log("Title:", note.title);
+                    console.log("Content:", note.content);
+                });
+
+            } catch (error) {
+                console.error("JSON parse hatası:", error);
+            }
+
+
+            return notes;
+        } catch (error) {
+            console.error('Dosya okuma hatası:', error);
+            return [];
+        }
+    });
+
 }
 
 app.whenReady().then(createWindow);
