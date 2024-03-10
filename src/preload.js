@@ -1,7 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-    title : "The Note App",
+    title : "",
     createNote : (data) => ipcRenderer.invoke('create-file', data),
     readNotes: () => ipcRenderer.invoke('read-notes')
 })

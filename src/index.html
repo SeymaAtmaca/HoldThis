@@ -1,19 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hold This App</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body>
-    <h1 id="title"></h1>
+    <div class="navbar-container">
+        <div class="navbar">
+            <a href="#" class="navbar-brand">Keep My Notes</a>
+            <ul class="navbar-nav">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Notes</a></li>
+                <li><a href="#">Feedback</a></li>
+            </ul>
+        </div>
+    </div>
     
+    <h1 id="title" class="title"></h1>
+
     <br><br>
-    <ul id = "noteList"></ul>
-    <input type="text"  id="noteTitle"> <!--input:text#noteTirle -->
-    <input type="text"  id="noteContent">
-    <button id="noteSubmit">button</button>
+    <div class="nodeList">
+        <ul id="noteList"></ul>
+    </div>
+
+    <div class="add-note-form" style="display: none;">
+        <input type="text" id="noteTitle" placeholder="Enter note title">
+        <input type="text" id="noteContent" placeholder="Enter note content">
+        <button id="noteSubmit">Add Note</button>
+    </div>
+    <button id="showAddNoteFormButton">Add New Note</button>
+    
     <script src="../js/script.js"></script>
 </body>
+
 </html>

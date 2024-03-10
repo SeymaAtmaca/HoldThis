@@ -1,31 +1,46 @@
-const title_element = document.getElementById('title');
-title_element.innerText = api.title;
+const titleElement = document.getElementById('title');
+const noteTitleInput = document.getElementById('noteTitle');
+const noteContentInput = document.getElementById('noteContent');
+const noteSubmitButton = document.getElementById('noteSubmit');
+const addNoteForm = document.querySelector('.add-note-form');
+const showAddNoteFormButton = document.getElementById('showAddNoteFormButton');
+const noteListElement = document.getElementById('noteList');
 
-const note_title_el = document.getElementById('noteTitle');
-const note_content_el = document.getElementById('noteContent');
-const note_submit_el = document.getElementById('noteSubmit');
+showAddNoteFormButton.addEventListener('click', () => {
+    addNoteForm.style.display = 'block';
+});
+
+noteSubmitButton.addEventListener('click', async () => {
+    const title = noteTitleInput.value;
+    const content = noteContentInput.value;
+    addNoteForm.style.display = 'none';
+    const res = await api.createNote({
+        title,
+        content
+    });
+    noteTitleInput.value = '';
+    noteContentInput.value = '';
+    getNotesList();
+});
+
+async function getNotesList() {
+    noteListElement.innerHTML = ''; // Önceki notları temizle
+    const notes = await api.readNotes();
+    notes.forEach(note => {
+        const div = document.createElement('div');
+        div.classList.add('note');
+        div.innerHTML = `
+          <h2>${note.title}</h2>
+          <p>${note.content}</p>
+        `;
+        noteListElement.appendChild(div);
+    });
+}
 
 async function init() {
     const notes = await api.readNotes();
-    const noteList = document.getElementById('noteList');
-
-    notes.forEach(note => {
-        const li = document.createElement('li');
-        li.textContent = `Title: ${note.title}, Content: ${note.content}`;
-        noteList.appendChild(li);
-    });
-
-    note_submit_el.addEventListener('click', async () => {
-        const title = note_title_el.value;
-        const content = note_content_el.value;
-
-        const res = await api.createNote({
-            title,
-            content
-        });
-        note_title_el.value = "";
-        note_content_el.value = "";
-    });
+    titleElement.innerText = api.title;
+    getNotesList();
 }
 
 init();
