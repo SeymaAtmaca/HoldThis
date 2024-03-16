@@ -26,15 +26,30 @@ noteSubmitButton.addEventListener('click', async () => {
 async function getNotesList() {
     noteListElement.innerHTML = ''; // Önceki notları temizle
     const notes = await api.readNotes();
-    notes.forEach(note => {
+    notes.forEach((note, index) => {
         const div = document.createElement('div');
         div.classList.add('note');
+
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = 'Delete';
+        deleteButton.addEventListener('click', async () => {
+            await deleteNote(index);
+        });
+
         div.innerHTML = `
-          <h2>${note.title}</h2>
-          <p>${note.content}</p>
+            <h2>${note.title}</h2>
+            <p>${note.content}</p>
         `;
+        div.appendChild(deleteButton);
         noteListElement.appendChild(div);
     });
+}
+
+async function deleteNote(index) {
+    const notes = await api.readNotes();
+    notes.splice(index, 1); 
+    await api.updateNotes(notes); 
+    getNotesList(); 
 }
 
 async function init() {

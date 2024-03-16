@@ -41,6 +41,17 @@ function createWindow() {
         }
     });
 
+    ipcMain.handle('update-notes', async (event, notes) => {
+        try {
+            const filePath = path.join(__dirname, 'notes', 'notes.json');
+            await fs.promises.writeFile(filePath, JSON.stringify(notes));
+            return { success: true };
+        } catch (error) {
+            console.error('Dosya yazma hatası:', error);
+            return { success: false, message: 'Dosya yazma hatası.' };
+        }
+    });
+
     ipcMain.handle('read-notes', async (event) => {
         try {
             const filePath = path.join(__dirname, 'notes', 'notes.json');
@@ -48,11 +59,6 @@ function createWindow() {
             var notes;
             try {
                 notes = JSON.parse(jsonData);
-
-                notes.forEach(note => {
-                    console.log("Title:", note.title);
-                    console.log("Content:", note.content);
-                });
 
             } catch (error) {
                 console.error("JSON parse hatası:", error);
